@@ -1,0 +1,238 @@
+Source Code Structure
+Project Structure
+com.example.siridhanyahub
+│
+├── activities
+│   ├── MainActivity.kt
+│   ├── MandiPriceActivity.kt
+│   ├── RecipeActivity.kt
+│   ├── HealthBenefitsActivity.kt
+│   └── FavoriteRecipeActivity.kt
+│
+├── adapters
+│   ├── MandiAdapter.kt
+│   └── RecipeAdapter.kt
+│
+├── models
+│   ├── MandiPrice.kt
+│   └── Recipe.kt
+│
+├── database
+│   ├── AppDatabase.kt
+│   ├── RecipeDao.kt
+│   └── FavoriteRecipe.kt
+│
+├── api
+│   ├── ApiClient.kt
+│   └── ApiService.kt
+│
+└── utils
+    └── Constants.kt
+
+MainActivity.kt
+package com.example.siridhanyahub
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.siridhanyahub.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.btnMandi.setOnClickListener {
+            startActivity(Intent(this, MandiPriceActivity::class.java))
+        }
+
+        binding.btnRecipe.setOnClickListener {
+            startActivity(Intent(this, RecipeActivity::class.java))
+        }
+
+        binding.btnHealth.setOnClickListener {
+            startActivity(Intent(this, HealthBenefitsActivity::class.java))
+        }
+    }
+}
+
+MandiPrice.kt
+package com.example.siridhanyahub.models
+
+data class MandiPrice(
+    val city: String,
+    val milletName: String,
+    val price: Double,
+    val trend: String
+)
+
+Recipe.kt
+package com.example.siridhanyahub.models
+
+data class Recipe(
+    val title: String,
+    val ingredients: String,
+    val steps: String,
+    val imageUrl: String
+)
+
+MandiAdapter.kt
+package com.example.siridhanyahub
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.siridhanyahub.databinding.ActivityMainBinding
+
+class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.btnMandi.setOnClickListener {
+            startActivity(Intent(this, MandiPriceActivity::class.java))
+        }
+
+        binding.btnRecipe.setOnClickListener {
+            startActivity(Intent(this, RecipeActivity::class.java))
+        }
+
+        binding.btnHealth.setOnClickListener {
+            startActivity(Intent(this, HealthBenefitsActivity::class.java))
+        }
+    }
+}
+
+RecipeAdapter.kt
+package com.example.siridhanyahub.adapters
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.siridhanyahub.databinding.ItemRecipeBinding
+import com.example.siridhanyahub.models.Recipe
+
+class RecipeAdapter(private val recipes: List<Recipe>) :
+    RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
+
+    class ViewHolder(val binding: ItemRecipeBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemRecipeBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val recipe = recipes[position]
+
+        holder.binding.txtTitle.text = recipe.title
+        holder.binding.txtIngredients.text = recipe.ingredients
+
+        Glide.with(holder.itemView.context)
+            .load(recipe.imageUrl)
+            .into(holder.binding.imgRecipe)
+    }
+
+    override fun getItemCount(): Int = recipes.size
+}
+
+MandiPriceActivity.kt
+package com.example.siridhanyahub.activities
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.siridhanyahub.adapters.MandiAdapter
+import com.example.siridhanyahub.databinding.ActivityMandiBinding
+import com.example.siridhanyahub.models.MandiPrice
+
+class MandiPriceActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMandiBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMandiBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        val mandiList = listOf(
+            MandiPrice("Bengaluru", "Navane", 4500.0, "UP"),
+            MandiPrice("Davangere", "Sajje", 3900.0, "DOWN"),
+            MandiPrice("Mysuru", "Baragu", 4200.0, "UP")
+        )
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = MandiAdapter(mandiList)
+    }
+}
+
+RecipeActivity.kt
+package com.example.siridhanyahub.adapters
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.siridhanyahub.databinding.ItemRecipeBinding
+import com.example.siridhanyahub.models.Recipe
+
+class RecipeAdapter(private val recipes: List<Recipe>) :
+    RecyclerView.Adapter<RecipeAdapter.ViewHolder>() {
+
+    class ViewHolder(val binding: ItemRecipeBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val binding = ItemRecipeBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false
+        )
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val recipe = recipes[position]
+
+        holder.binding.txtTitle.text = recipe.title
+        holder.binding.txtIngredients.text = recipe.ingredients
+
+        Glide.with(holder.itemView.context)
+            .load(recipe.imageUrl)
+            .into(holder.binding.imgRecipe)
+    }
+
+    override fun getItemCount(): Int = recipes.size
+}
+
+HealthBenefitsActivity.kt
+package com.example.siridhanyahub.activities
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.example.siridhanyahub.databinding.ActivityHealthBinding
+
+class HealthBenefitsActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityHealthBinding
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityHealthBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        binding.txtHealth.text =
+            "Navane helps control diabetes and improves digestion."
+    }
+}
+
