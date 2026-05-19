@@ -1,0 +1,148 @@
+package com.example.siridhanyahub
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import kotlin.random.Random
+// ---------------- MAIN ACTIVITY ----------------
+class MainActivity : ComponentActivity() {
+ override fun onCreate(savedInstanceState: Bundle?) {
+ super.onCreate(savedInstanceState)
+ setContent { App() }
+ }
+}
+// ---------------- DATA MODELS ----------------
+data class MandiPrice(
+ val millet: String,
+ val city: String,
+ val price: Int,
+ val history: List<Int>
+)
+data class Recipe(
+ val name: String,
+ val millet: String,
+ val steps: String
+)
+  // ---------------- SAMPLE DATA ----------------
+fun samplePrices(): List<MandiPrice> {
+ return listOf(
+ MandiPrice("Navane", "Bengaluru", 42, List(7) { Random.nextInt(35, 50) }),
+ MandiPrice("Sajje", "Davangere", 38, List(7) { Random.nextInt(30, 45) }),
+ MandiPrice("Baragu", "Mysuru", 45, List(7) { Random.nextInt(40, 55) })
+ )
+}
+fun sampleRecipes() = listOf(
+ Recipe("Navane Upma", "Navane", "1. Roast\n2. Cook\n3. Add vegetables"),
+ Recipe("Sajje Roti", "Sajje", "1. Knead dough\n2. Roll\n3. Cook on tawa"),
+ Recipe("Baragu Pongal", "Baragu", "1. Boil\n2. Add spices\n3. Serve hot")
+)
+// ---------------- APP ROOT ----------------
+@Composable
+fun App() {
+ var screen by remember { mutableStateOf("MANDI") }
+ Column(modifier = Modifier.fillMaxSize().background(Color(0xFFF1F8E9))) {
+ Row(
+ modifier = Modifier.fillMaxWidth().padding(8.dp),
+ horizontalArrangement = Arrangement.SpaceEvenly
+ ) {
+ Button(onClick = { screen = "MANDI" }) { Text("Mandi") }
+ Button(onClick = { screen = "RECIPES" }) { Text("Recipes") }
+ }
+ when (screen) {
+ "MANDI" -> MandiScreen()
+ "RECIPES" -> RecipeScreen()
+ }
+ }
+}
+// ---------------- MANDI SCREEN ----------------
+@Composable
+fun MandiScreen() {
+ val prices = remember { samplePrices() }
+ LazyColumn(modifier = Modifier.padding(8.dp)) {
+ items(prices) { item ->
+ MandiCard(item)
+ }
+ }
+}
+@Composable
+fun MandiCard(item: MandiPrice) {
+ val high = item.history.maxOrNull() ?: item.price
+ val low = item.history.minOrNull() ?: item.price
+ val trendUp = item.price >= item.history.last()
+ Card(
+ modifier = Modifier
+ .fillMaxWidth()
+ .padding(8.dp),
+ colors = CardDefaults.cardColors(containerColor = Color(0xFFD7CCC8))
+ ) {
+ Column(modifier = Modifier.padding(12.dp)) {
+ Text("${item.millet} - ${item.city}",
+ style = MaterialTheme.typography.titleLarge)
+ Text("₹${item.price}",
+ style = MaterialTheme.typography.headlineMedium)
+ Text("7-day High: ₹$high Low: ₹$low")
+ Text(
+ text = if (trendUp) "↑ Rising" else "↓ Falling",
+ color = if (trendUp) Color.Green else Color.Red
+ )
+ }
+}
+// ---------------- RECIPE SCREEN ----------------
+@Composable
+fun RecipeScreen() {
+ val allRecipes = remember { sampleRecipes() }
+ var search by remember { mutableStateOf("") }
+ val favorites = remember { mutableStateListOf<Recipe>() }
+ val filtered = allRecipes.filter {
+ it.millet.contains(search, true)
+ }
+ Column(modifier = Modifier.padding(8.dp)) {
+ OutlinedTextField(
+ value = search,
+ onValueChange = { search = it },
+ label = { Text("Search by Millet (Navane, Sajje...)") },
+ modifier = Modifier.fillMaxWidth()
+ )
+ Spacer(modifier = Modifier.height(8.dp))
+ LazyColumn {
+ items(filtered) { recipe ->
+ RecipeCard(recipe, favorites)
+ }
+ }
+ }
+}
+@Composable
+fun RecipeCard(recipe: Recipe, favorites: MutableList<Recipe>) {
+ val isSaved = favorites.contains(recipe)
+ Card(
+ modifier = Modifier
+  .fillMaxWidth()
+ .padding(8.dp),
+ colors = CardDefaults.cardColors(containerColor = Color(0xFFC8E6C9))
+ ) {
+ Column(modifier = Modifier.padding(12.dp)) {
+ Text(recipe.name, style = MaterialTheme.typography.titleLarge)
+ Text("Millet: ${recipe.millet}")
+ Spacer(modifier = Modifier.height(8.dp))
+ Text(recipe.steps)
+ Spacer(modifier = Modifier.height(8.dp))
+ Text(
+ text = if (isSaved) "★ Saved" else "☆ Save",
+ modifier = Modifier.clickable {
+ if (isSaved) favorites.remove(recipe)
+ else favorites.add(recipe)
+ },
+ color = Color(0xFF2E7D32)
+ )
+ }
+ }
+}
