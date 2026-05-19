@@ -1,0 +1,177 @@
+# Assets for Siri-Dhanya Hub 🌾
+
+## 1. Image Assets
+
+Used for UI design and app visuals.
+
+### Millet Images
+
+* navane.png
+* sajje.png
+* baragu.png
+* ragi.png
+
+### Food/Recipe Images
+
+* millet_idli.jpg
+* millet_dosa.jpg
+* millet_upma.jpg
+* millet_ladoo.jpg
+
+### Icons
+
+* ic_market.png
+* ic_recipe.png
+* ic_health.png
+* ic_favorite.png
+* ic_search.png
+
+### Banner Images
+
+* banner_millet.jpg
+* banner_farming.jpg
+
+---
+
+# 2. Drawable Resources
+
+Location:
+
+```plaintext
+app/src/main/res/drawable/
+```
+
+Files:
+
+```plaintext
+bg_card.xml
+rounded_button.xml
+gradient_background.xml
+```
+
+---
+
+# 3. Color Assets
+
+Used for earthy and natural UI theme.
+
+```xml
+<color name="green">#4CAF50</color>
+<color name="brown">#8D6E63</color>
+<color name="cream">#FFF8E1</color>
+<color name="darkGreen">#2E7D32</color>
+```
+
+---
+
+# 4. Font Assets
+
+Location:
+
+```plaintext
+app/src/main/res/font/
+```
+
+Suggested Fonts:
+
+* Poppins
+* Nunito
+* Roboto
+
+---
+
+# 5. Audio Assets (Optional)
+
+Used for voice guidance or app notifications.
+
+Files:
+
+* welcome_audio.mp3
+* recipe_voice.mp3
+
+---
+
+# 6. Database Assets
+
+Sample JSON/Data files.
+
+```json
+{
+  "millet": "Navane",
+  "price": 4500,
+  "city": "Bengaluru"
+}
+```
+
+---
+
+# 7. Layout Assets
+
+Location:
+
+```plaintext
+app/src/main/res/layout/
+```
+
+Files:
+
+* activity_main.xml
+* activity_recipe.xml
+* activity_mandi.xml
+* item_recipe.xml
+* item_mandi.xml
+
+---
+
+# 8. Animation Assets (Optional)
+
+Location:
+
+```plaintext
+app/src/main/res/anim/
+```
+
+Files:
+
+* fade_in.xml
+* slide_up.xml
+
+---
+
+# 9. Firebase Assets
+
+Configuration file:
+
+```plaintext
+google-services.json
+```
+
+Used for:
+
+* Firestore Database
+* Authentication
+* Cloud Storage
+
+---
+
+# 10. App Logo & Splash Screen
+
+Files:
+
+* app_logo.png
+* splash_screen.xml
+
+---
+
+# Folder Structure
+
+```plaintext
+assets/
+│
+├── images/
+├── icons/
+├── fonts/
+├── audio/
+├── json/
+└── animations/
+```
